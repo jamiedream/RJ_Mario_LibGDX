@@ -1,0 +1,103 @@
+
+menubutton.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg2
+  rotate: false
+  xy: 1, 837
+  size: 1920, 1200
+  orig: 1920, 1200
+  offset: 0, 0
+  index: -1
+topic
+  rotate: false
+  xy: 1, 715
+  size: 500, 120
+  orig: 500, 120
+  offset: 0, 0
+  index: -1
+fb
+  rotate: false
+  xy: 1, 613
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+fb_check
+  rotate: false
+  xy: 503, 735
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+fb_hover
+  rotate: false
+  xy: 1, 511
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+rank
+  rotate: false
+  xy: 855, 735
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+rank_check
+  rotate: false
+  xy: 1, 409
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+rank_hover
+  rotate: false
+  xy: 1207, 735
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+setting
+  rotate: false
+  xy: 1, 307
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+setting_check
+  rotate: false
+  xy: 1559, 735
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+setting_hover
+  rotate: false
+  xy: 1, 205
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+start
+  rotate: false
+  xy: 1, 103
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+start_check
+  rotate: false
+  xy: 1, 1
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1
+start_hover
+  rotate: false
+  xy: 503, 633
+  size: 350, 100
+  orig: 350, 100
+  offset: 0, 0
+  index: -1

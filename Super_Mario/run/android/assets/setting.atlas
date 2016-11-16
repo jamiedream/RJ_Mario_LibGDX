@@ -1,0 +1,103 @@
+
+setting.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg2
+  rotate: false
+  xy: 1, 817
+  size: 1920, 1200
+  orig: 1920, 1200
+  offset: 0, 0
+  index: -1
+function
+  rotate: false
+  xy: 1, 303
+  size: 1024, 512
+  orig: 1024, 512
+  offset: 0, 0
+  index: -1
+volume
+  rotate: false
+  xy: 1, 1
+  size: 750, 300
+  orig: 750, 300
+  offset: 0, 0
+  index: -1
+topic
+  rotate: false
+  xy: 1027, 695
+  size: 500, 120
+  orig: 500, 120
+  offset: 0, 0
+  index: -1
+musicoff
+  rotate: false
+  xy: 1027, 393
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+musicon
+  rotate: false
+  xy: 753, 1
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+cancel
+  rotate: false
+  xy: 1529, 695
+  size: 350, 120
+  orig: 350, 120
+  offset: 0, 0
+  index: -1
+cancel_check
+  rotate: false
+  xy: 1329, 573
+  size: 350, 120
+  orig: 350, 120
+  offset: 0, 0
+  index: -1
+cancel_hover
+  rotate: false
+  xy: 1329, 451
+  size: 350, 120
+  orig: 350, 120
+  offset: 0, 0
+  index: -1
+music
+  rotate: false
+  xy: 1329, 329
+  size: 350, 120
+  orig: 350, 120
+  offset: 0, 0
+  index: -1
+ok
+  rotate: false
+  xy: 1681, 573
+  size: 350, 120
+  orig: 350, 120
+  offset: 0, 0
+  index: -1
+ok_check
+  rotate: false
+  xy: 1681, 451
+  size: 350, 120
+  orig: 350, 120
+  offset: 0, 0
+  index: -1
+ok_hover
+  rotate: false
+  xy: 1681, 329
+  size: 350, 120
+  orig: 350, 120
+  offset: 0, 0
+  index: -1
+sound
+  rotate: false
+  xy: 1055, 207
+  size: 350, 120
+  orig: 350, 120
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,103 @@
+
+marioANDenemies.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+arrow
+  rotate: false
+  xy: 1, 413
+  size: 350, 350
+  orig: 350, 350
+  offset: 0, 0
+  index: -1
+arrow01
+  rotate: false
+  xy: 1, 61
+  size: 350, 350
+  orig: 350, 350
+  offset: 0, 0
+  index: -1
+arrow01_b
+  rotate: false
+  xy: 353, 413
+  size: 350, 350
+  orig: 350, 350
+  offset: 0, 0
+  index: -1
+arrow01_l
+  rotate: false
+  xy: 353, 61
+  size: 350, 350
+  orig: 350, 350
+  offset: 0, 0
+  index: -1
+arrow01_r
+  rotate: false
+  xy: 705, 413
+  size: 350, 350
+  orig: 350, 350
+  offset: 0, 0
+  index: -1
+arrow_b
+  rotate: false
+  xy: 705, 61
+  size: 350, 350
+  orig: 350, 350
+  offset: 0, 0
+  index: -1
+arrow_l
+  rotate: false
+  xy: 1057, 413
+  size: 350, 350
+  orig: 350, 350
+  offset: 0, 0
+  index: -1
+arrow_r
+  rotate: false
+  xy: 1057, 61
+  size: 350, 350
+  orig: 350, 350
+  offset: 0, 0
+  index: -1
+largemario
+  rotate: false
+  xy: 1, 27
+  size: 339, 32
+  orig: 339, 32
+  offset: 0, 0
+  index: -1
+mario
+  rotate: false
+  xy: 1409, 747
+  size: 220, 16
+  orig: 220, 16
+  offset: 0, 0
+  index: -1
+turtle
+  rotate: false
+  xy: 1, 1
+  size: 96, 24
+  orig: 96, 24
+  offset: 0, 0
+  index: -1
+goomba
+  rotate: false
+  xy: 342, 43
+  size: 48, 16
+  orig: 48, 16
+  offset: 0, 0
+  index: -1
+flower
+  rotate: false
+  xy: 1409, 721
+  size: 33, 24
+  orig: 33, 24
+  offset: 0, 0
+  index: -1
+mushroom
+  rotate: false
+  xy: 1631, 747
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,93 @@
+package SCREEN;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import MENU.GameMenu;
+import run.game.Jumper;
+
+public class CompleteScreen implements Screen{
+	Viewport viewport;
+	Stage stage;
+	Table table;
+	Jumper jumper;
+	BitmapFont font;
+
+	public CompleteScreen(Jumper jumper) {
+		this.jumper=jumper;
+		viewport = new FitViewport(jumper.screenW, jumper.screenH, new OrthographicCamera());
+		stage = new Stage( viewport, jumper.batch);
+		
+		table = new Table();
+		table.center();
+		table.setFillParent(true);
+		
+		font = new BitmapFont(Gdx.files.internal("fonts/Bungee_Inline.fnt"));
+        Label.LabelStyle style = new Label.LabelStyle(font, Color.MAGENTA);
+        Label done = new Label("Well Done",style);
+        Label back = new Label("Back to Main Screen",new Label.LabelStyle(new BitmapFont(), Color.DARK_GRAY));
+        table.add(done).expandX();
+        table.row();
+        table.add(back).expandX();
+        stage.addActor(table);
+        
+        
+	}
+
+	@Override
+	public void show() {
+	}
+
+	@Override
+	public void render(float delta) {
+		if(Gdx.input.justTouched()){
+			jumper.setScreen(new GameMenu(jumper));
+			dispose();
+		}
+		Gdx.gl.glClearColor(0, 0, 0, 0.3f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		stage.draw();
+		
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

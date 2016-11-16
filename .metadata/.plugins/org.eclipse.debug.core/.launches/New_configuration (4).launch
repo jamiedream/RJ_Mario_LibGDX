@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.github.sdbg.debug.core.browserLaunchConfig">
+<stringAttribute key="applicationName" value=""/>
+<booleanAttribute key="launchFile" value="false"/>
+<stringAttribute key="projectName" value=""/>
+<stringAttribute key="url" value=""/>
+<stringAttribute key="urlQueryParams" value=""/>
+</launchConfiguration>
