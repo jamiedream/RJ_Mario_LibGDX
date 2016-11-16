@@ -1,0 +1,123 @@
+package SCREEN;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+
+import run.game.Jumper;
+
+public class main_test implements Screen{
+	Stage stage;
+	ImageButton myButton;
+		public main_test(Jumper jumper) {
+//			TextureAtlas buttonsAtlas = new TextureAtlas("img/button/button.pack"); //**button atlas image **//
+			Skin buttonSkin = new Skin();
+
+		        
+		        stage = new Stage();        //** window is stage **//
+		        stage.clear();
+		        Gdx.input.setInputProcessor(stage); //** stage is responsive **//
+		        
+		        Texture textureUp   = new Texture(Gdx.files.internal("arrow_b.png"));
+		        Texture textureDown = new Texture(Gdx.files.internal("arrow_l.png"));
+		        Texture background  = new Texture(Gdx.files.internal("data/background.png"));
+		        
+		        myButton   = new ImageButton(
+		        		new SpriteDrawable(new Sprite(textureUp)),
+		                new SpriteDrawable(new Sprite(textureDown)));
+		        
+
+		     
+
+		        myButton.addListener(new InputListener() {
+		            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+		                    Gdx.app.log("my app", "Pressed"); //** Usually used to start Game, etc. **//
+
+		                    return true;
+
+		            }
+
+		            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+		                 
+
+		            }
+		        });
+
+
+
+		        MoveToAction moveAction = new MoveToAction();//Add dynamic movement effects to button
+		        moveAction.setPosition(Gdx.graphics.getWidth()/2-button.getWidth()/2, Gdx.graphics.getHeight()/2+ Gdx.graphics.getHeight()/6);
+		        moveAction.setDuration(.5f);
+		        button.addAction(moveAction);
+
+		        stage.addActor(button);
+			
+			
+		}
+	
+		@Override
+		public void show() {
+
+			
+			
+		}
+		
+		public void update(float dt){
+			
+		}
+	
+		@Override
+		public void render(float delta) {
+			// TODO Auto-generated method stub
+	         Gdx.gl.glClearColor(1, 1, 1, 1);
+	         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	         stage.act();
+	         stage.draw();
+	         
+	         myButton.
+		}
+
+		@Override
+		public void resize(int width, int height) {
+			
+		}
+
+		@Override
+		public void pause() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void resume() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void hide() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void dispose() {
+	
+			
+		}
+
+
+}

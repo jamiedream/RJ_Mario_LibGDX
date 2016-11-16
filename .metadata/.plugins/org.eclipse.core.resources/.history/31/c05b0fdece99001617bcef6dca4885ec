@@ -1,0 +1,86 @@
+package SCREEN;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
+import run.game.Jumper;
+
+public class Splash implements Screen{
+	private Texture textureSplash = new Texture("splash.jpg");
+	private Image splashimage = new Image(textureSplash);
+	private Stage stage = new Stage();
+	Jumper jumper;
+	GameMenu menu = new GameMenu();
+
+
+	public Splash(Jumper jumper) {
+		this.jumper = jumper;
+		Gdx.app.log("splash", "con");
+	}
+
+	@Override
+	public void show() {
+		stage.addActor(splashimage);
+		Gdx.app.log("splash", "show");
+		splashimage.addAction(
+				Actions.sequence(
+				Actions.alpha(0),
+				Actions.fadeIn(4.0f),
+				Actions.delay(1),
+				Actions.run(new Runnable(){
+					@Override
+					public void run() {						
+						jumper.setScreen(menu);
+					}
+					
+				}
+						
+						)
+				));
+		Gdx.app.log("splash", "action");
+	}
+
+	@Override
+	public void render(float delta) {
+		stage.act();
+		stage.draw();
+		Gdx.app.log("splash", "splashrender");
+		
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispose() {
+		textureSplash.dispose();
+		
+	}
+	
+
+}

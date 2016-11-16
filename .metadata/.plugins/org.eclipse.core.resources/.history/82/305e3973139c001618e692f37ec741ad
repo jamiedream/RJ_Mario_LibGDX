@@ -1,0 +1,47 @@
+package run.game;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
+import SCREEN.GameMenu;
+import SCREEN.PlayScreen;
+import SCREEN.Splash;
+
+public class Jumper extends Game {
+	public static SpriteBatch batch;
+	public static int screenW=400, screenH=208;
+//	public static float viewW, viewH;
+	public static float PPM = 16;//pixels per meter
+	
+
+	
+	@Override
+	public void create () {
+//		viewW = Gdx.graphics.getWidth();
+//		viewH = Gdx.graphics.getHeight();	
+		//import splash for beginning
+		batch= new SpriteBatch();
+		setScreen(new PlayScreen(this));
+
+		
+		
+	}
+
+	@Override
+	public void render () {
+		super.render();
+	}
+	
+	@Override
+	public void dispose () {
+		 
+
+	}
+
+	
+}

@@ -1,0 +1,383 @@
+package SPRITES;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+
+import MENU.Setting;
+import SCREEN.CompleteScreen;
+import SCREEN.PlayScreen;
+import SPRITES.enemies.Enemy;
+import SPRITES.enemies.Turtle;
+import run.game.Jumper;
+
+public class Mario extends Sprite{
+	World world;
+	public Body mbody;
+	BodyDef bdef;
+	FixtureDef fdef;
+	
+	TextureRegion marioStand;
+	public enum State{Jumping, Falling, Running, Standing, Growing, Dead};
+	public State current, previous;
+	TextureRegion marioJumping;
+	Animation marioRunning;
+	float stateTimer; //tracking time of any given state
+	boolean runningRight;//tracking which direction mario running
+	TextureRegion bigMarioStand, bigMarioJump;
+	Animation bigMarioRun, growMario;
+	public boolean marioIsBig, runGrowAnimation;
+	boolean timeToDefineBigMario;
+	Vector2 currentPosition;
+	boolean timeToRedefineMario;
+	Vector2 redefinePosition;
+	TextureRegion marioDead;
+	boolean marioIsDead, isDead;
+	Jumper jumper;
+	
+	
+	public Mario(PlayScreen screen){
+//		super(screen.getAtlas().findRegion("mario"));   mario growing
+		world = screen.getWorld();		
+		//initial state
+		current = State.Standing;
+		previous = State.Standing;
+		stateTimer = 0;
+		runningRight = true;
+		//create mario mbody
+		defineMario();
+		
+		marioStand = new TextureRegion(screen.getAtlas().findRegion("mario"), 0, 0, 16, 16);
+		setBounds(0, 0, 16/Jumper.PPM,16/Jumper.PPM);
+		setRegion(marioStand);	
+		
+		Array<TextureRegion> frames = new Array<TextureRegion>();
+		for(int i=1; i<5; i++){
+			frames.add(new TextureRegion(screen.getAtlas().findRegion("mario"), i*16, 0, 16, 16));
+		}
+			marioRunning = new Animation(0.1f, frames);
+			frames.clear();
+		
+		marioJumping = new TextureRegion(screen.getAtlas().findRegion("mario"), 80, 0, 16, 16);
+			
+		//bigMario
+		bigMarioStand = new TextureRegion(screen.getAtlas().findRegion("largemario"), 0, 0, 16, 32);
+		bigMarioJump = new TextureRegion(screen.getAtlas().findRegion("largemario"), 80, 0, 16, 32);
+		for(int i=1; i<5; i++){
+			frames.add(new TextureRegion(screen.getAtlas().findRegion("largemario"), i*16, 0, 16, 32));
+		}
+			bigMarioRun = new Animation(0.1f, frames);
+			frames.clear();
+		//growMario animation
+//			frames.add(new TextureRegion(screen.getAtlas().findRegion("largemario"), 240, 0, 16, 32));
+//			frames.add(new TextureRegion(screen.getAtlas().findRegion("largemario"), 0, 0, 16, 32));
+//			frames.add(new TextureRegion(screen.getAtlas().findRegion("largemario"), 240, 0, 16, 32));
+//			frames.add(new TextureRegion(screen.getAtlas().findRegion("largemario"), 0, 0, 16, 32));
+			for(int i=0; i<2; i++){
+				frames.add(new TextureRegion(screen.getAtlas().findRegion("largemario"), 240, 0, 16, 32));
+				frames.add(new TextureRegion(screen.getAtlas().findRegion("largemario"), 0, 0, 16, 32));
+			}
+			growMario = new Animation(0.4f, frames);
+			frames.clear();
+		//dead
+			marioDead = new TextureRegion(screen.getAtlas().findRegion("mario"), 96, 0, 16, 32);
+		
+		
+	}
+	public void update(float dt){
+		
+		if(marioIsBig){
+			setPosition(mbody.getPosition().x-getWidth()/2, mbody.getPosition().y-getHeight()/2 - 6/Jumper.PPM );
+		}else{
+			setPosition(mbody.getPosition().x-getWidth()/2, mbody.getPosition().y-getHeight()/2);
+		}
+		if(mbody.getPosition().y < -8f){
+			marioIsDead = true;
+			Filter filter = new Filter();
+			//when mario die, he will not having any collision.
+			filter.maskBits = Jumper.NOTHING_BIT;
+			for(Fixture fixture:mbody.getFixtureList()){
+				fixture.setFilterData(filter);
+			}
+			mbody.applyLinearImpulse(new Vector2(0,16f), mbody.getWorldCenter(), true);
+		}
+		
+		setRegion(getFrame(dt));//make sure which frame mario got
+		if(timeToDefineBigMario){
+			defineBigMario();			
+		}
+		if(timeToRedefineMario){
+			redefineMario();
+		}
+		
+        
+	}
+	public TextureRegion getFrame(float dt){
+		current = getState();
+		
+		TextureRegion region;
+		switch(current){
+			case Dead:
+				region = marioDead;
+				break;
+			case Growing:
+				region = growMario.getKeyFrame(stateTimer);
+				if(growMario.isAnimationFinished(stateTimer)){
+					runGrowAnimation = false;
+				}
+				break;
+			case Jumping:
+				region = marioIsBig? bigMarioJump : marioJumping;
+				break;
+			case Running:
+				region = marioIsBig? bigMarioRun.getKeyFrame(stateTimer, true) : marioRunning.getKeyFrame(stateTimer, true);
+				break;
+			case Falling:
+			case Standing:
+			default:
+				region = marioIsBig? bigMarioStand : marioStand;
+				break;		
+		}
+		//which direction mario facing?
+		if(mbody.getLinearVelocity().x<0 || !runningRight && !region.isFlipX()){
+			region.flip(true, false);
+			runningRight = false;
+		}
+		if(mbody.getLinearVelocity().x>0 || runningRight && region.isFlipX()){
+			region.flip(true, false);
+			runningRight = true;
+		}
+		//check if current state = previous state
+		//if yes then execute time counter and update current state = previous state
+		stateTimer = current == previous? stateTimer+dt:0;
+		previous = current;
+		
+		return region;
+	}
+	public void grow(){
+		if(!marioIsBig){
+			marioIsBig = true;
+			runGrowAnimation = true;
+			setBounds(getX(), getY(), getWidth(), getHeight()*2);
+			if(Setting.isCheckedSound){
+				jumper.manager.get("audio/sounds/powerup.wav", Sound.class).stop();
+			}else{
+				jumper.manager.get("audio/sounds/powerup.wav", Sound.class).play();
+			}
+			timeToDefineBigMario = true;
+		}
+		
+	}
+	public State getState(){
+		//determine when will enum state happen
+		if(marioIsDead){
+			return State.Dead;
+		}else
+		if(runGrowAnimation){
+			return State.Growing;
+		}else
+		if(mbody.getLinearVelocity().y>0 || (mbody.getLinearVelocity().y<0 && previous == current) ){
+			return State.Jumping;
+		}else
+		if(mbody.getLinearVelocity().y<0){
+			return State.Falling;
+		}else
+		if(mbody.getLinearVelocity().x!=0){
+			return State.Running;
+		}else{
+			return State.Standing;
+		}
+	}
+	
+	public void defineMario(){
+		bdef = new BodyDef();
+		//1 let mario show in center of the view, (getViewWidth/2)/(getViewWidth/400)/jumper.PPM
+		bdef.position.set(2,32/Jumper.PPM);
+		bdef.type = BodyDef.BodyType.DynamicBody;
+		mbody = world.createBody(bdef);
+		
+		fdef = new FixtureDef();
+//		put shape on the center of mario, for hang this character in our view 
+		
+//		EdgeShape feet = new EdgeShape();		
+//		feet.set(new Vector2(-2/Jumper.PPM, -5/Jumper.PPM),  new Vector2(2/Jumper.PPM, -5/Jumper.PPM));
+		
+//	    PolygonShape shape = new PolygonShape();
+//	    shape.setAsBox(2 / Jumper.PPM, 6 / Jumper.PPM);
+		
+		CircleShape circle = new CircleShape();
+		circle.setRadius(6/Jumper.PPM);
+		fdef.shape = circle;
+		//default filter && colliding filter; categoryBits:what is this fixture
+		fdef.filter.categoryBits = Jumper.MARIO_BIT;
+		//maskbits: what the texture can collide with
+		fdef.filter.maskBits = Jumper.GROUND_BIT | Jumper.BRICK_BIT | 
+				Jumper.COIN_BIT | Jumper.OBJECT_BIT | Jumper.ENEMY_BIT | Jumper.ENEMY_HEAD_BIT |
+				Jumper.ITEM_BIT | Jumper.HELL_BIT | Jumper.COMPLETE_BIT;
+		mbody.createFixture(fdef).setUserData(this);
+		
+		//put head for detect collided
+		EdgeShape head = new EdgeShape();
+		head.set(new Vector2(-2/Jumper.PPM, 7/Jumper.PPM),  new Vector2(2/Jumper.PPM, 7/Jumper.PPM));
+		fdef.shape = head;
+		fdef.isSensor = true;//detect collided?
+		fdef.filter.categoryBits = Jumper.MARIO_HEAD_BIT;
+		mbody.createFixture(fdef).setUserData(this);//this = head
+		
+		circle.dispose();
+		head.dispose();
+	}
+	
+	public void defineBigMario(){	
+		currentPosition = mbody.getPosition();
+		world.destroyBody(mbody);
+		
+		bdef = new BodyDef();
+		bdef.position.set(currentPosition.add(0, 10/Jumper.PPM));
+		bdef.type = BodyDef.BodyType.DynamicBody;
+		mbody = world.createBody(bdef);
+		
+		fdef = new FixtureDef();
+		
+//		EdgeShape feet = new EdgeShape();		
+//		feet.set(new Vector2(-2/Jumper.PPM, -18/Jumper.PPM),  new Vector2(2/Jumper.PPM, -18/Jumper.PPM));	
+		CircleShape circle = new CircleShape();
+		circle.setRadius(6/Jumper.PPM);
+		fdef.shape = circle;
+		//default filter && colliding filter; categoryBits:what is this fixture
+		fdef.filter.categoryBits = Jumper.MARIO_BIT;
+		fdef.filter.maskBits = Jumper.GROUND_BIT | Jumper.BRICK_BIT | 
+				Jumper.COIN_BIT | Jumper.OBJECT_BIT | Jumper.ENEMY_BIT | Jumper.ENEMY_HEAD_BIT |
+				Jumper.ITEM_BIT | Jumper.COMPLETE_BIT | Jumper.HELL_BIT;
+		mbody.createFixture(fdef).setUserData(this);
+		circle.setPosition(new Vector2(0, -14/Jumper.PPM));
+		mbody.createFixture(fdef).setUserData(this);
+		
+		//put head for detect collided
+		EdgeShape head = new EdgeShape();
+		head.set(new Vector2(-2/Jumper.PPM, 7/Jumper.PPM),  new Vector2(2/Jumper.PPM, 7/Jumper.PPM));
+		fdef.shape = head;
+		fdef.isSensor = true;//detect collided?
+		fdef.filter.categoryBits = Jumper.MARIO_HEAD_BIT;
+		mbody.createFixture(fdef).setUserData(this);//this = head
+//		head.set(new Vector2(0, -14/Jumper.PPM),  new Vector2(0, -14/Jumper.PPM));
+//		mbody.createFixture(fdef).setUserData(this);//this = head, for bigmario
+		
+		timeToDefineBigMario = false;
+		
+		circle.dispose();
+		head.dispose();
+	} 
+	
+	public void hit(Enemy enemy){
+		if(enemy instanceof Turtle && ((Turtle)enemy).getCurrentState() == Turtle.State.STANDING_SHELL){
+			((Turtle)enemy).kick(this.getX() <= enemy.getX() ? Turtle.Right_Slide:Turtle.Left_Slide);
+		}else{
+			if(marioIsBig){
+				marioIsBig = false;
+				timeToRedefineMario = true;
+				if(Setting.isCheckedSound){
+					jumper.manager.get("audio/sounds/powerdown.wav", Sound.class).stop();
+				}else{
+					jumper.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
+				}
+			}else{
+				jumper.manager.get("audio/music/mario_music.ogg", Music.class).stop();
+				if(Setting.isCheckedSound){
+					jumper.manager.get("audio/sounds/mariodie.wav", Sound.class).stop();
+				}else{
+					jumper.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+				}
+				marioIsDead = true;
+				Filter filter = new Filter();
+				//when mario die, he will not having any collision.
+				filter.maskBits = Jumper.NOTHING_BIT;
+				for(Fixture fixture:mbody.getFixtureList()){
+					fixture.setFilterData(filter);
+				}
+				mbody.applyLinearImpulse(new Vector2(0,2f), mbody.getWorldCenter(), true);
+			}
+		}
+	}
+
+	
+	public void redefineMario(){
+		redefinePosition = mbody.getPosition();
+		setBounds(getX(), getY(), getWidth(), getHeight()/2);
+		world.destroyBody(mbody);
+		
+		bdef = new BodyDef();
+		bdef.position.set(redefinePosition);
+		bdef.type = BodyDef.BodyType.DynamicBody;
+		mbody = world.createBody(bdef);
+		
+		fdef = new FixtureDef();
+		
+		CircleShape circle = new CircleShape();
+		circle.setRadius(6/Jumper.PPM);
+		fdef.shape = circle;
+		//default filter && colliding filter; categoryBits:what is this fixture
+		fdef.filter.categoryBits = Jumper.MARIO_BIT;
+		fdef.filter.maskBits = Jumper.GROUND_BIT | Jumper.BRICK_BIT | 
+				Jumper.COIN_BIT | Jumper.OBJECT_BIT | Jumper.ENEMY_BIT | Jumper.ENEMY_HEAD_BIT |
+				Jumper.ITEM_BIT | Jumper.COMPLETE_BIT | Jumper.HELL_BIT;
+		mbody.createFixture(fdef).setUserData(this);
+		
+		//put head for detect collided
+		EdgeShape head = new EdgeShape();
+		head.set(new Vector2(-2/Jumper.PPM, 7/Jumper.PPM),  new Vector2(2/Jumper.PPM, 7/Jumper.PPM));
+		fdef.shape = head;
+		fdef.isSensor = true;//detect collided?
+		fdef.filter.categoryBits = Jumper.MARIO_HEAD_BIT;
+		mbody.createFixture(fdef).setUserData(this);//this = head
+		
+		timeToRedefineMario = false;
+		
+		circle.dispose();
+		head.dispose();
+	}
+	
+	
+	public float getStateTimer(){
+		return stateTimer;
+	}
+	
+	public boolean isDead(){
+		return marioIsDead;
+	}
+	
+//	public void fallen(){
+//		jumper.manager.get("audio/music/mario_music.ogg", Music.class).stop();
+//		if(Setting.isCheckedSound){
+//			jumper.manager.get("audio/sounds/mariodie.wav", Sound.class).stop();
+//		}else{
+//			jumper.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+//		}
+//		
+//		marioIsDead = true;
+//		Filter filter = new Filter();
+//		//when mario die, he will not having any collision.
+//		filter.maskBits = Jumper.NOTHING_BIT;
+//		for(Fixture fixture:mbody.getFixtureList()){
+//			fixture.setFilterData(filter);
+//		}
+//		mbody.applyLinearImpulse(new Vector2(0,16f), mbody.getWorldCenter(), true);
+//	}
+
+	    
+
+}

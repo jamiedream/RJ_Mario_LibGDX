@@ -1,0 +1,105 @@
+package SCREEN;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import MENU.GameMenu;
+import run.game.Jumper;
+
+public class CompleteScreen implements Screen{
+	Viewport viewport;
+	Stage stage;
+	Table table;
+	Jumper jumper;
+	BitmapFont font;
+	Texture load = new Texture("loading.png");
+	Image loading = new Image(load);
+	GameMenu menu;
+	public CompleteScreen(Jumper jumper) {
+		this.jumper=jumper;
+		menu = new GameMenu(jumper);
+		viewport = new FitViewport(jumper.screenW, jumper.screenH, new OrthographicCamera());
+		stage = new Stage( viewport, jumper.batch);
+		
+		table = new Table();
+		table.center();
+		table.setFillParent(true);
+		
+		font = new BitmapFont(Gdx.files.internal("fonts/Bungee_Inline.fnt"));
+        Label.LabelStyle style = new Label.LabelStyle(font, Color.MAGENTA);
+        Label gameover = new Label("Well Done",style);
+        table.add(gameover).expandX();
+        stage.addActor(table);
+        stage.addActor(loading);
+	}
+
+	@Override
+	public void show() {
+		loading.addAction(
+				Actions.sequence(
+				Actions.alpha(0),
+				Actions.fadeIn(3.0f),
+				Actions.delay(1),
+				Actions.fadeOut(0.5f),
+				Actions.run(new Runnable(){
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						((Game) Gdx.app.getApplicationListener()).setScreen(menu);
+					}
+				})
+				));
+	}
+
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClearColor(0, 0, 0, 0.3f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		stage.draw();
+		
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

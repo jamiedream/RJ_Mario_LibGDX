@@ -1,0 +1,86 @@
+package SCREEN;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import run.game.Jumper;
+
+public class GameMenu implements Screen{
+	Jumper jumper;
+	int w, h;
+	int button_W, button_H;
+	Texture topic, start, setting, record, login;
+	OrthographicCamera camera;
+	
+	
+	public GameMenu(Jumper jumper){
+		this.jumper = jumper;
+		w=jumper.screenW;
+		h=jumper.screenH;
+		button_W = w/3;
+		button_H = h/6;
+		this.camera = new OrthographicCamera(w,h);
+		topic = new Texture("menu/topic.png");
+		
+		
+	}
+
+	@Override
+	public void show() {
+		
+	}
+
+	@Override
+	public void render(float delta) {	
+		
+//		start = new Texture("menu/start.png");
+//		setting = new Texture("menu/setting.png");
+//		record = new Texture("menu/record.png");
+//		login = new Texture("menu/fb.png");		
+		Gdx.gl.glClearColor(1, 1, 1, 0);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		jumper.batch.begin();
+		jumper.batch.setProjectionMatrix(camera.combined);
+		jumper.batch.draw(topic, -(w-button_W)/2, h/2-button_H, button_W*2, button_H);
+		jumper.batch.end();
+		
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispose() {
+		
+		
+	}
+	
+
+}

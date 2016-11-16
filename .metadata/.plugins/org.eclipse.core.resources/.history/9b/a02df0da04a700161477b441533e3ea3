@@ -1,0 +1,10 @@
+package Facebook;
+
+public class MyFacebookConfig extends GDXFacebookConfig {
+	public MyFacebookConfig() {
+		APP_ID = "1559365201012064";
+		PREF_FILENAME = ".fbSession";
+
+	}
+
+}

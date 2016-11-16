@@ -1,0 +1,172 @@
+package MENU;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+
+import Login.GdxFacebookSampleApp;
+import SCREEN.PlayScreen;
+import run.game.Jumper;
+
+public class GameMenu implements Screen{
+	float w, h;
+	float button_W, button_H;
+	Jumper jumper;
+	OrthographicCamera camera;
+	TextureAtlas atlas, animationatlas;	
+	TextureRegion main, topic, start, setting, rank, login, animation;
+	ImageButton istart, isetting, irank, ilogin;
+	Stage stage;	
+	TextureRegionDrawable startDrawable, settingDrawable, rankDrawable, loginDrawable;
+	Animation marioRun;
+	float elapsedTime = 0;
+	GdxFacebookSampleApp gfsa;
+
+	//ui
+	public GameMenu(Jumper jumper){
+		this.jumper = jumper;
+		w=jumper.screenW;
+		h=jumper.screenH;
+		button_W = w/3;
+		button_H = h/6;
+		//menu ui
+		camera = new OrthographicCamera(w,h);		
+		atlas = new TextureAtlas("menubutton.atlas");
+		main = new TextureRegion(atlas.findRegion("bg2"));
+		topic = new TextureRegion(atlas.findRegion("topic"));
+		//animate
+		animationatlas = new TextureAtlas("animation.pack");
+		marioRun = new Animation(1/15f, animationatlas.getRegions());
+		
+		//image button
+		stage = new Stage(new StretchViewport(w, h));
+		stage.clear();
+		
+		start = new TextureRegion(atlas.findRegion("start"));
+		startDrawable = new TextureRegionDrawable(start);
+        istart = new ImageButton(startDrawable);
+        istart.setSize(button_W, button_H);
+        istart.setPosition(button_W,button_H*3);
+        
+		setting = new TextureRegion(atlas.findRegion("setting"));
+		settingDrawable = new TextureRegionDrawable(setting);
+        isetting = new ImageButton(settingDrawable);
+        isetting.setSize(button_W, button_H*9/10);
+        isetting.setPosition(button_W,button_H*2);
+        
+		rank = new TextureRegion(atlas.findRegion("rank"));
+		rankDrawable = new TextureRegionDrawable(rank);
+        irank = new ImageButton(rankDrawable);
+        irank.setSize(button_W, button_H*9/10);
+        irank.setPosition(button_W,button_H);
+        
+		login = new TextureRegion(atlas.findRegion("fb"));
+		loginDrawable = new TextureRegionDrawable(login);
+        ilogin = new ImageButton(loginDrawable);
+        ilogin.setSize(button_W, button_H*9/10);
+        ilogin.setPosition(button_W,0);
+		
+		stage.addActor(istart);
+		stage.addActor(isetting);
+		stage.addActor(irank);
+		stage.addActor(ilogin);
+		
+		jumper.handleMusic();
+
+	}
+
+
+	//switch screen
+	@Override
+	public void show() {
+		istart.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	((Game) Gdx.app.getApplicationListener()).setScreen(new PlayScreen(jumper));
+                return true;
+            }
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {                
+            }
+        });
+		isetting.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	((Game) Gdx.app.getApplicationListener()).setScreen(new Setting(jumper));
+                return true;
+            }
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {                
+            }
+        });
+		
+		ilogin.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	((Game) Gdx.app.getApplicationListener()).setScreen((Screen) new GdxFacebookSampleApp());
+                return true;
+            }
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {                
+            }
+        });
+
+		
+		//for button switch screen
+		Gdx.input.setInputProcessor(stage);
+		
+	}
+
+	@Override
+	public void render(float dt) {
+		elapsedTime += Gdx.graphics.getDeltaTime();;
+		
+		Gdx.gl.glClearColor(1, 1, 1, 0);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		Jumper.batch.setProjectionMatrix(camera.combined);
+		Jumper.batch.begin();
+		Jumper.batch.draw(main, -w/2, -h/2, w, h);
+		Jumper.batch.draw(topic, -button_W, h/2-button_H*2, button_W*2, button_H*2);
+		Jumper.batch.draw(marioRun.getKeyFrame(elapsedTime, true), -w/2, -h/2, 100, 120);
+		Jumper.batch.end();
+		
+		stage.act();
+		stage.draw();
+		
+		
+	}
+
+	@Override
+	public void resize(int w, int h) {
+	}
+
+	@Override
+	public void pause() {
+		
+	}
+
+	@Override
+	public void resume() {
+		
+		
+	}
+
+	@Override
+	public void hide() {
+		dispose();
+	}
+
+	@Override
+	public void dispose() {
+		
+	}
+
+	
+
+}

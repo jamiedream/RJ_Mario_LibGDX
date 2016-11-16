@@ -1,0 +1,95 @@
+package SCENES;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import run.game.Jumper;
+
+public class Hud {
+	Viewport viewport;
+	public Stage stage;
+	Table table, btable;
+	
+	Integer worldtimer;
+	Integer score;
+	float timercounter;
+	
+	Label counttimelabel;
+	Label scorelabel;
+	Label timerlabel;
+	Label levellabel;
+	Label worldlabel;
+	Label mariolabel;
+	
+	BitmapFont font;
+	
+	Texture top, right, left, bottom;
+	Image itop, iright, ileft, ibottom;
+	
+	public Hud(SpriteBatch batch){		
+		font = new BitmapFont(Gdx.files.internal("fonts/Bungee_Inline.fnt"));
+        Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
+        		
+		worldtimer = 0;
+		score = 0;
+		timercounter = 0;
+		
+		viewport = new FitViewport(Jumper.screenW,Jumper.screenH,new OrthographicCamera());	
+		stage = new Stage(viewport, batch);
+		table = new Table();
+		table.top();
+		table.setFillParent(true);
+		
+		counttimelabel = new Label(String.format("%03d", worldtimer),style);
+		scorelabel = new Label(String.format("%06d", score),style);
+		timerlabel = new Label("Time",style);
+		levellabel = new Label("1-1",style);
+		worldlabel = new Label("World",style);
+		mariolabel = new Label("Mario",style);
+		//setting labels to table
+		//share the same row x
+		table.add(mariolabel).expandX().padTop(5);
+		table.add(worldlabel).expandX().padTop(5);
+		table.add(timerlabel).expandX().padTop(5);
+		table.row();//next row
+		table.add(scorelabel).expandX();
+		table.add(levellabel).expandX();
+		table.add(counttimelabel).expandX();
+		
+		stage.addActor(table);
+		
+		//control button
+		top = new Texture("arrow_t");
+		right = new Texture("arrow_r");
+		left = new Texture("arrow_l");
+		bottom = new Texture("arrow_b");
+		
+		Image itop = new Image(top);
+		Image iright = new Image(right);
+		Image ileft = new Image(left);
+		Image ibottom = new Image(bottom);
+		
+		btable = new Table();
+		table.bottom().left();
+		table.add(ileft).padBottom(5);
+		table.add(itop).padBottom(5);
+		table.add(ibottom).padBottom(5);
+		table.add(iright).padBottom(5);
+		stage.addActor(btable);
+//		Gdx.input.setInputProcessor(stage);
+		
+		
+	}
+	
+}

@@ -1,0 +1,105 @@
+package run.game;
+
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import Facebook.GDXFacebookConfig;
+import Facebook.GDXFacebookGraphRequest;
+import Facebook.GDXFacebookSystem;
+import Login.FacebookConfig;
+import Login.GdxFacebookSampleApp;
+import MENU.GameMenu;
+import MENU.Setting;
+
+public class Jumper extends Game {
+	//Virtual Screen size and Box2D Scale(Pixels Per Meter)
+	public static final float screenW = 400;
+	public static final float screenH = 208;
+	public static final float PPM = 200;
+
+	//Box2D Collision Bits (FILTER, binary) 
+	public static final short NOTHING_BIT = 0;
+	public static final short GROUND_BIT = 1;
+	public static final short MARIO_BIT = 1 << 1;
+	public static final short BRICK_BIT = 1 << 2;
+	public static final short COIN_BIT = 1 << 3;
+	public static final short DESTROYED_BIT = 1 << 4;
+	public static final short OBJECT_BIT = 1 << 5;
+	public static final short ENEMY_BIT = 1 << 6;
+	public static final short ENEMY_HEAD_BIT = 1 << 7;
+	public static final short ITEM_BIT = 1 << 8;
+	public static final short MARIO_HEAD_BIT = 1 << 9;
+	public static final short WALL_BIT = 1 << 10;
+//	public static final short HELL_BIT = 1 << 11;
+//	public static final short COMPLETE_BIT = 1 << 12;
+//	public static final short FIREBALL_BIT = 2048;
+	
+
+
+	public static SpriteBatch batch;
+	public static AssetManager manager;
+	 
+	Music music;
+	
+	@Override
+	public void create () {		
+		batch = new SpriteBatch();
+
+		manager = new AssetManager();		
+		manager.load("audio/sounds/coin.wav", Sound.class);
+		manager.load("audio/sounds/bump.wav", Sound.class);
+		manager.load("audio/sounds/breakblock.wav", Sound.class);
+		manager.load("audio/sounds/powerup_spawn.wav", Sound.class);
+		manager.load("audio/sounds/powerup.wav", Sound.class);
+		manager.load("audio/sounds/powerdown.wav", Sound.class);
+		manager.load("audio/sounds/stomp.wav", Sound.class);
+		manager.load("audio/sounds/mariodie.wav", Sound.class);
+
+		manager.load("audio/music/mario_music.ogg", Music.class);
+		manager.finishLoading();		
+		
+		setScreen(new GdxFacebookSampleApp (this));
+		
+		//login
+		//debug output
+		Gdx.app.setLogLevel(Application.LOG_DEBUG); 
+		FacebookConfig config = new FacebookConfig();
+		if (config.APP_ID == null || config.APP_ID.equals("REPLACE_WITH_YOUR_APP_ID")) {
+            throw new RuntimeException("You need to set APP_ID in MyFacebookConfig class.");
+        }
+
+//        gdxFacebook = GDXFacebookSystem.install(config);
+		
+	}
+    public AssetManager getAssetManager() {  	
+        return manager;
+    }
+
+  //music
+	public void handleMusic(){
+		music = manager.get("audio/music/mario_music.ogg", Music.class);
+		music.setLooping(true);
+		music.play();
+		if(Setting.isChecked)music.stop();
+	}
+
+    
+	@Override
+	public void render () {
+		super.render();
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		manager.dispose();
+		batch.dispose();
+	}
+
+
+}

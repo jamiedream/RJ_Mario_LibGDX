@@ -1,0 +1,124 @@
+package SPRITES.TOOLS;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+
+import SCREEN.PlayScreen;
+import SPRITES.enemies.Enemy;
+import SPRITES.enemies.Goomba;
+import SPRITES.enemies.Turtle;
+import SPRITES.tiledObject.Brick;
+import SPRITES.tiledObject.Coin;
+import run.game.Jumper;
+
+public class WorldCreator {
+	Jumper jumper;
+	World world;
+	BodyDef bdef;
+	PolygonShape pshape;
+	FixtureDef fdef;
+	Body body;
+	TiledMap map;
+	static Array<Goomba> goombas;
+	static Array<Turtle> turtles;
+	
+	public WorldCreator(PlayScreen screen){
+		world = screen.getWorld();
+		map = screen.getMap();
+		bdef = new BodyDef();
+		pshape = new PolygonShape();
+		fdef = new FixtureDef();
+		//get object ground from tiledmap
+		for(MapObject object:map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
+			ObjectofMap(object);
+			fdef.filter.categoryBits = Jumper.OBJECT_BIT;
+		}
+		//get object pipe from tiledmap
+		for(MapObject object:map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
+			ObjectofMap(object);
+//			fdef.filter.categoryBits = Jumper.OBJECT_BIT;
+		}
+		//get object wall from tiledmap
+		for(MapObject object:map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)){
+			ObjectofMap(object);
+//					fdef.filter.categoryBits = Jumper.OBJECT_BIT;
+			
+		}
+		//get object coin from tiledmap
+		for(MapObject object:map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
+//			ObjectofMap(object);
+//			Rectangle rec = ((RectangleMapObject)object).getRectangle();
+			new Coin(screen, object);
+			
+		}
+		//get object brick from tiledmap
+		for(MapObject object:map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
+//			ObjectofMap(object);
+//			Rectangle rec = ((RectangleMapObject)object).getRectangle();
+			new Brick(screen, object);
+			
+		}
+		
+		//get object hell from tiledmap
+		for(MapObject object:map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)){
+					ObjectofMap(object);
+					fdef.filter.categoryBits = Jumper.HELL_BIT;
+			
+		}
+		//get object hell from tiledmap
+		for(MapObject object:map.getLayers().get(10).getObjects().getByType(RectangleMapObject.class)){
+					ObjectofMap(object);
+					fdef.filter.categoryBits = Jumper.COMPLETE_BIT;
+			
+		}
+		//create all goombas
+		goombas = new Array<Goomba>();
+		for(MapObject object:map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
+			Rectangle rec = ((RectangleMapObject)object).getRectangle();
+			goombas.add(new Goomba(screen, rec.getX()/jumper.PPM, rec.getY()/jumper.PPM));
+		}
+		//create all turtle
+		turtles = new Array<Turtle>();
+		for(MapObject object:map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){
+			Rectangle rec = ((RectangleMapObject)object).getRectangle();
+			turtles.add(new Turtle(screen, rec.getX()/jumper.PPM, rec.getY()/jumper.PPM));
+		}
+	}
+	//MapObject object
+	public void ObjectofMap(MapObject object){
+		Rectangle rec = ((RectangleMapObject)object).getRectangle();
+		
+		bdef.type = BodyDef.BodyType.StaticBody;
+		bdef.position.set((rec.getX()+rec.getWidth()/2)/jumper.PPM, (rec.getY()+rec.getHeight()/2)/jumper.PPM);
+		body = world.createBody(bdef);
+		
+		pshape.setAsBox(rec.getWidth()/2/jumper.PPM, rec.getHeight()/2/jumper.PPM);
+		fdef.shape = pshape;
+		body.createFixture(fdef);
+	}
+	
+
+//	public Array<Goomba> getGoomba() {
+//		return goomba;
+//	}
+	public Array<Enemy> getEnemy() {
+		Array<Enemy> enemy = new Array<Enemy>();
+		enemy.addAll(goombas);
+		enemy.addAll(turtles);
+		return enemy;
+	}
+	
+	public static void removeTurtle(Turtle turtle){
+		turtles.removeValue(turtle, false);
+	}
+
+}
