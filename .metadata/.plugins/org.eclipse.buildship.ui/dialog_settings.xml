@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.buildship.ui.wizard.project.import">
-		<item value="J:\Libgdx\facebook-android-sdk-4.16.0" key="project_location"/>
+		<item value="J:\Libgdx\run" key="project_location"/>
 	</section>
 </section>
