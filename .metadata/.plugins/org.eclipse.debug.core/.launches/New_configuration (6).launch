@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="com.gwtplugins.gdt.eclipse.suite.webapp">
-<booleanAttribute key="com.gwtplugins.gdt.eclipse.core.AUTO_PORT_SELECTION" value="true"/>
-<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="com.gwtplugins.gwt.eclipse.core.moduleClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value=""/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value=""/>
-</launchConfiguration>
